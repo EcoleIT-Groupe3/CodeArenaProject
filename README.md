@@ -1,328 +1,191 @@
-# CodeArena - Plateforme de Compétition de Code
+# CodeArena - Plateforme de Programmation Compétitive
 
-![CodeArena](https://img.shields.io/badge/Status-Production%20Ready-green)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue)
-![Supabase](https://img.shields.io/badge/Supabase-Enabled-brightgreen)
+Application fullstack de coding challenges avec React, Node.js, Express et PostgreSQL.
 
-> Plateforme complète de compétition de programmation en temps réel avec système de classement, exécution de code et gestion de concours.
-
-## 📖 À Propos
-
-CodeArena est une plateforme moderne permettant aux développeurs de:
-- Résoudre des défis de programmation
-- Participer à des concours en temps réel
-- Améliorer leurs compétences
-- Se mesurer à d'autres développeurs sur un leaderboard global
-
-## 🌟 Fonctionnalités
-
-### ✅ Implémenté
-
-- **Authentification Complète**
-  - Inscription/connexion sécurisée (Supabase Auth)
-  - Gestion de session avec JWT
-  - Protection des routes
-
-- **Bibliothèque de Problèmes**
-  - 3 problèmes exemple (Two Sum, Reverse String, Fibonacci)
-  - Niveaux de difficulté (Easy, Medium, Hard)
-  - Cas de test multiples
-  - Limites de temps et mémoire
-
-- **Éditeur de Code Professionnel**
-  - Monaco Editor (moteur VS Code)
-  - Support JavaScript, Python, Java
-  - Coloration syntaxique
-  - Auto-complétion
-
-- **Système de Soumission**
-  - Exécution et validation de code
-  - Résultats détaillés par cas de test
-  - Calcul automatique du score
-  - Historique des soumissions
-
-- **Leaderboard Global**
-  - Classement en temps réel
-  - Statistiques utilisateur
-  - Trophées et médailles
-
-- **Gestion de Concours**
-  - Création et gestion de concours
-  - Planification avec dates
-  - Statuts (à venir, actif, terminé)
-
-- **Sécurité**
-  - Row Level Security (RLS) sur toutes les tables
-  - Politiques d'accès restrictives
-  - Validation des entrées
-
-## 🗄️ Base de Données
-
-Cette branche `bd_codearena` contient tous les éléments pour reproduire la base de données:
-
-### Structure
+## 🏗️ Architecture
 
 ```
-database/
-├── migrations/
-│   └── 001_create_schema.sql      # Schéma complet avec RLS (360+ lignes)
-├── seeds/
-│   ├── 001_sample_problems.sql    # 3 problèmes exemple
-│   └── 002_sample_contests.sql    # Concours de test
-├── queries/
-│   └── useful_queries.sql         # 50+ requêtes utiles
-├── README.md                       # Documentation détaillée de la BD
-└── SCHEMA.md                       # Diagramme ERD complet
+CodeArenaProject/
+├── backend/              # API Node.js/Express
+│   ├── src/
+│   │   ├── config/      # Configuration (DB, Auth)
+│   │   ├── controllers/ # Contrôleurs API
+│   │   ├── middleware/  # Middlewares (Auth, Errors)
+│   │   ├── models/      # Modèles de données
+│   │   ├── routes/      # Routes API
+│   │   ├── services/    # Logique métier
+│   │   └── server.js    # Point d'entrée
+│   ├── database/
+│   │   ├── migrations/  # Migrations SQL
+│   │   └── seeds/       # Données de test
+│   ├── Dockerfile
+│   └── package.json
+│
+├── frontend/            # Application React
+│   ├── src/
+│   │   ├── components/  # Composants réutilisables
+│   │   ├── pages/       # Pages de l'application
+│   │   ├── services/    # Services API
+│   │   └── App.tsx
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── package.json
+│
+└── docker-compose.yml   # Orchestration Docker
 ```
 
-### Tables
+## 🚀 Démarrage rapide
 
-| Table                  | Description                          | Lignes de Code |
-|------------------------|--------------------------------------|----------------|
-| users                  | Profils utilisateurs                 | ~30            |
-| problems               | Problèmes de programmation           | ~35            |
-| contests               | Concours                             | ~40            |
-| contest_participants   | Participation aux concours           | ~35            |
-| submissions            | Soumissions de code                  | ~50            |
+### Prérequis
+- Docker
+- Docker Compose
 
-**Total**: 5 tables, 10 politiques RLS, 8 index
+### Installation et lancement
 
-## 📁 Contenu de la Branche
+1. **Cloner le projet**
+```bash
+git clone <votre-repo>
+cd CodeArenaProject
+```
 
-### Documentation
+2. **Lancer l'application avec Docker**
+```bash
+docker-compose up --build
+```
 
-| Fichier                     | Description                                      |
-|-----------------------------|--------------------------------------------------|
-| `README.md`                 | Ce fichier - Vue d'ensemble du projet            |
-| `ACCES_BASE_DONNEES.md`     | Guide complet d'accès à la base de données       |
-| `INSTALLATION.md`           | Instructions d'installation pas à pas            |
-| `database/README.md`        | Documentation détaillée de la base               |
-| `database/SCHEMA.md`        | Diagramme ERD et spécifications                  |
+Cette commande va :
+- Créer la base de données PostgreSQL
+- Lancer le backend sur le port 5000
+- Lancer le frontend sur le port 3000
+- Exécuter les migrations et seeds automatiquement
 
-### Scripts SQL
+3. **Accéder à l'application**
+- Frontend : http://localhost:3000
+- Backend API : http://localhost:5000/api
+- PostgreSQL : localhost:5432
 
-| Fichier                              | Lignes | Description                           |
-|--------------------------------------|--------|---------------------------------------|
-| `migrations/001_create_schema.sql`   | 360+   | Schéma complet avec RLS               |
-| `seeds/001_sample_problems.sql`      | 90+    | 3 problèmes exemple avec cas de test  |
-| `seeds/002_sample_contests.sql`      | 60+    | Concours de démonstration             |
-| `queries/useful_queries.sql`         | 400+   | Plus de 50 requêtes prêtes à l'emploi |
+## 📡 API Endpoints
 
-## 🚀 Démarrage Rapide
+### Authentication
+- `POST /api/auth/register` - Inscription
+- `POST /api/auth/login` - Connexion
+- `GET /api/auth/profile` - Profil utilisateur (auth requis)
 
-### 1. Accès à la Base de Données
+### Problems
+- `GET /api/problems` - Liste des problèmes
+- `GET /api/problems/:id` - Détails d'un problème
+- `GET /api/problems/slug/:slug` - Problème par slug
 
-Toutes les informations sont dans [`ACCES_BASE_DONNEES.md`](./ACCES_BASE_DONNEES.md):
-- URL du projet Supabase
-- Clés d'API
-- Variables d'environnement
+### Contests
+- `GET /api/contests` - Liste des concours
+- `GET /api/contests/:id` - Détails d'un concours
+- `POST /api/contests/:id/join` - Rejoindre un concours
 
-### 2. Création de la Base de Données
+### Submissions
+- `POST /api/submissions` - Soumettre une solution
+- `GET /api/submissions/my-submissions` - Mes soumissions
+
+### Leaderboard
+- `GET /api/leaderboard` - Classement global
+
+## 🛠️ Développement local
+
+### Backend
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Base de données
+```bash
+cd backend
+npm run migrate  # Exécuter les migrations
+npm run seed     # Insérer les données de test
+```
+
+## 🔐 Variables d'environnement
+
+### Backend (.env)
+```
+PORT=5000
+DATABASE_HOST=postgres
+DATABASE_PORT=5432
+DATABASE_NAME=codearena
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
+JWT_SECRET=your-secret-key
+JWT_EXPIRE=7d
+```
+
+### Frontend (.env)
+```
+VITE_API_URL=http://localhost:5000/api
+```
+
+## 🐳 Commandes Docker utiles
 
 ```bash
-# Option 1: Via Supabase SQL Editor
-# Copiez-collez le contenu de database/migrations/001_create_schema.sql
+# Lancer les services
+docker-compose up
 
-# Option 2: Via Supabase CLI
-supabase db execute -f database/migrations/001_create_schema.sql
-supabase db execute -f database/seeds/001_sample_problems.sql
+# Lancer en arrière-plan
+docker-compose up -d
+
+# Arrêter les services
+docker-compose down
+
+# Rebuild complet
+docker-compose up --build
+
+# Voir les logs
+docker-compose logs -f
+
+# Accéder au container backend
+docker exec -it codearena-backend sh
+
+# Accéder à PostgreSQL
+docker exec -it codearena-postgres psql -U postgres -d codearena
 ```
 
-### 3. Vérification
+## 📦 Technologies utilisées
 
-```sql
--- Vérifier les tables
-SELECT tablename FROM pg_tables WHERE schemaname = 'public';
+### Backend
+- Node.js + Express
+- PostgreSQL
+- JWT (Authentication)
+- bcryptjs (Hash passwords)
 
--- Vérifier les problèmes
-SELECT title, difficulty FROM problems;
-
--- Résultat attendu: 3 problèmes (Two Sum, Reverse String, Fibonacci)
-```
-
-## 📊 Schéma de la Base de Données
-
-```
-users (1:N) ────> submissions (N:1) ────> problems
-  │                     │
-  │                     └──> (N:1) contests
-  │
-  └──> (1:N) contest_participants (N:1) ──> contests
-```
-
-### Tables Principales
-
-1. **users** - Profils utilisateurs avec scores
-2. **problems** - Défis de programmation
-3. **contests** - Événements de compétition
-4. **contest_participants** - Inscriptions aux concours
-5. **submissions** - Soumissions de code avec résultats
-
-Voir [`database/SCHEMA.md`](./database/SCHEMA.md) pour le diagramme ERD complet.
-
-## 🔒 Sécurité
-
-### Row Level Security (RLS)
-
-Toutes les tables sont protégées par RLS:
-
-- ✅ **users**: Lecture publique, modification limitée
-- ✅ **problems**: Lecture publique authentifiée
-- ✅ **contests**: Lecture publique, création authentifiée
-- ✅ **submissions**: Création limitée à ses propres soumissions
-- ✅ **contest_participants**: Inscription limitée à soi-même
-
-### Politiques Implémentées
-
-- 10 politiques RLS actives
-- Authentification requise pour toutes les opérations
-- Vérification auth.uid() pour les modifications
-- Isolation des données par utilisateur
-
-## 📈 Statistiques du Projet
-
-- **Lignes de SQL**: 910+
-- **Lignes de Documentation**: 2,260+
-- **Requêtes Utiles**: 50+
-- **Tables**: 5
-- **Index**: 8
-- **Politiques RLS**: 10
-- **Commits**: 2
-
-## 🛠️ Stack Technique
-
-### Base de Données
-- PostgreSQL 14+ (via Supabase)
-- Row Level Security (RLS)
-- JSONB pour données flexibles
-- Index optimisés
-
-### Application (code source dans le projet principal)
-- React 18 + TypeScript
+### Frontend
+- React + TypeScript
 - Vite
 - Tailwind CSS
-- Supabase Client
-- Monaco Editor
+- Lucide Icons
 
-## 📚 Requêtes Utiles
+### DevOps
+- Docker
+- Docker Compose
+- Nginx
 
-Le fichier [`database/queries/useful_queries.sql`](./database/queries/useful_queries.sql) contient plus de 50 requêtes, incluant:
+## 👨‍💻 Développement
 
-### Statistiques
-```sql
--- Nombre total d'utilisateurs
-SELECT COUNT(*) FROM users;
+### Structure des routes backend
+Toutes les routes sont préfixées par `/api`
 
--- Taux de réussite global
-SELECT ROUND(
-  COUNT(*) FILTER (WHERE status = 'accepted')::numeric /
-  NULLIF(COUNT(*), 0) * 100, 2
-) as success_rate FROM submissions;
+### Authentification
+Les routes protégées nécessitent un token JWT dans le header :
+```
+Authorization: Bearer <token>
 ```
 
-### Classements
-```sql
--- Top 10 utilisateurs
-SELECT username, score, rank
-FROM users
-ORDER BY score DESC
-LIMIT 10;
-```
-
-### Analyses
-```sql
--- Problèmes les plus difficiles
-SELECT title, COUNT(*) as attempts,
-       COUNT(*) FILTER (WHERE status = 'accepted') as solves
-FROM problems p
-LEFT JOIN submissions s ON p.id = s.problem_id
-GROUP BY p.id
-ORDER BY solves ASC;
-```
-
-## 🔧 Maintenance
-
-### Recalculer les Rangs
-
-```sql
-WITH ranked_users AS (
-  SELECT id, ROW_NUMBER() OVER (ORDER BY score DESC) as new_rank
-  FROM users
-)
-UPDATE users SET rank = ranked_users.new_rank
-FROM ranked_users WHERE users.id = ranked_users.id;
-```
-
-### Mettre à Jour les Statuts de Concours
-
-```sql
-UPDATE contests SET status = 'active'
-WHERE status = 'upcoming' AND start_time <= NOW() AND end_time >= NOW();
-
-UPDATE contests SET status = 'completed'
-WHERE status = 'active' AND end_time < NOW();
-```
-
-## 📖 Documentation Complète
-
-| Document                      | Contenu                                          |
-|-------------------------------|--------------------------------------------------|
-| `ACCES_BASE_DONNEES.md`       | Informations de connexion complètes              |
-| `INSTALLATION.md`             | Guide d'installation étape par étape             |
-| `database/README.md`          | Documentation complète de la base de données     |
-| `database/SCHEMA.md`          | Schéma détaillé avec ERD et spécifications       |
-| `database/queries/useful_queries.sql` | Collection de requêtes prêtes à l'emploi |
-
-## 🎯 Utilisation
-
-### Pour Développeurs
-
-1. Clonez la branche `bd_codearena`
-2. Lisez [`ACCES_BASE_DONNEES.md`](./ACCES_BASE_DONNEES.md)
-3. Exécutez les scripts de migration
-4. Insérez les données de test
-5. Connectez votre application
-
-### Pour DBA
-
-1. Consultez [`database/SCHEMA.md`](./database/SCHEMA.md) pour le schéma
-2. Utilisez [`database/queries/useful_queries.sql`](./database/queries/useful_queries.sql) pour l'administration
-3. Configurez les backups automatiques
-4. Surveillez les performances avec les index fournis
-
-## 🤝 Contribution
-
-Pour ajouter de nouveaux problèmes:
-
-```sql
-INSERT INTO problems (title, description, difficulty, test_cases)
-VALUES (
-  'Votre Problème',
-  'Description détaillée...',
-  'Medium',
-  '[{"input": "test", "output": "expected"}]'::jsonb
-);
-```
-
-## 📄 Licence
+## 📝 License
 
 MIT
-
-## 🆘 Support
-
-Pour toute question:
-1. Consultez la documentation dans `/database/`
-2. Vérifiez les requêtes utiles dans `database/queries/`
-3. Lisez le guide de troubleshooting dans `ACCES_BASE_DONNEES.md`
-
-## 🎓 Ressources
-
-- [Documentation Supabase](https://supabase.com/docs)
-- [PostgreSQL Docs](https://www.postgresql.org/docs/)
-- [Row Level Security](https://supabase.com/docs/guides/auth/row-level-security)
-
----
-
-**Projet CodeArena** - Plateforme de compétition de code complète et production-ready 🚀
-
-Branche: `bd_codearena` | Base de données complète avec documentation
+"# update" 
