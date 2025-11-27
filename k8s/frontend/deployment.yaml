@@ -1,0 +1,183 @@
+# ================================================================================
+# Deployment - Frontend CodeArena (React + Nginx)
+# ================================================================================
+# Déploie le frontend React avec:
+# - Plusieurs réplicas pour la haute disponibilité
+# - Health checks (liveness + readiness probes)
+# - Ressources limitées (requests + limits)
+# - Stratégie de déploiement RollingUpdate
+# ================================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: codearena
+  labels:
+    app: codearena
+    component: frontend
+    version: v1
+spec:
+  # Nombre de réplicas du frontend
+  # Peut être ajusté via HPA (Horizontal Pod Autoscaler)
+  replicas: 3
+
+  # Sélecteur pour identifier les pods gérés par ce deployment
+  selector:
+    matchLabels:
+      app: codearena
+      component: frontend
+
+  # Stratégie de mise à jour
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Maximum de pods indisponibles pendant la mise à jour
+      maxUnavailable: 1
+      # Maximum de pods supplémentaires créés pendant la mise à jour
+      maxSurge: 1
+
+  # Template pour les pods
+  template:
+    metadata:
+      labels:
+        app: codearena
+        component: frontend
+        version: v1
+      annotations:
+        # Annotation pour Prometheus (monitoring)
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Affinité anti-pod: éviter de placer plusieurs réplicas sur le même node
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: component
+                  operator: In
+                  values:
+                  - frontend
+              topologyKey: kubernetes.io/hostname
+
+      # Containers
+      containers:
+      - name: nginx
+        # Image Docker du frontend (à remplacer par votre registry)
+        image: codearena/frontend:latest
+        imagePullPolicy: Always
+
+        # Port exposé par Nginx
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+
+        # Variables d'environnement depuis ConfigMap
+        envFrom:
+        - configMapRef:
+            name: codearena-config
+
+        # Ressources CPU et Mémoire
+        resources:
+          # Ressources minimales garanties
+          requests:
+            cpu: 100m       # 0.1 CPU
+            memory: 128Mi   # 128 MB
+          # Limites maximales
+          limits:
+            cpu: 500m       # 0.5 CPU
+            memory: 256Mi   # 256 MB
+
+        # Liveness Probe - Vérifie que le container est vivant
+        # Si échec, Kubernetes redémarre le pod
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 30    # Attendre 30s au démarrage
+          periodSeconds: 10           # Vérifier toutes les 10s
+          timeoutSeconds: 5           # Timeout de 5s
+          successThreshold: 1         # 1 succès = OK
+          failureThreshold: 3         # 3 échecs = redémarrage
+
+        # Readiness Probe - Vérifie que le container est prêt à recevoir du trafic
+        # Si échec, le pod est retiré du Service
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 10    # Attendre 10s au démarrage
+          periodSeconds: 5            # Vérifier toutes les 5s
+          timeoutSeconds: 3           # Timeout de 3s
+          successThreshold: 1         # 1 succès = prêt
+          failureThreshold: 3         # 3 échecs = pas prêt
+
+        # Startup Probe - Pour les applications lentes au démarrage
+        startupProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 30        # 30 * 10s = 5 minutes max de démarrage
+
+        # Politique de sécurité
+        securityContext:
+          runAsNonRoot: true          # Ne pas exécuter en root
+          runAsUser: 101              # UID de nginx
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+
+        # Volumes montés
+        volumeMounts:
+        - name: nginx-cache
+          mountPath: /var/cache/nginx
+        - name: nginx-run
+          mountPath: /var/run
+
+      # Volumes
+      volumes:
+      - name: nginx-cache
+        emptyDir: {}
+      - name: nginx-run
+        emptyDir: {}
+
+      # Redémarrage automatique des pods en cas d'échec
+      restartPolicy: Always
+
+      # Temps maximum pour terminer gracieusement
+      terminationGracePeriodSeconds: 30
+
+# ================================================================================
+# NOTES:
+# ================================================================================
+# 1. RESSOURCES:
+#    - requests: Garantie minimale (utilisée pour le scheduling)
+#    - limits: Maximum autorisé (si dépassé, le pod peut être terminé)
+#
+# 2. PROBES:
+#    - Liveness: Est-ce que l'app fonctionne ?
+#    - Readiness: Est-ce que l'app peut recevoir du trafic ?
+#    - Startup: Pour donner plus de temps au démarrage initial
+#
+# 3. STRATÉGIE DE DÉPLOIEMENT:
+#    - RollingUpdate: Met à jour les pods progressivement
+#    - Recreate: Supprime tous les pods avant de créer les nouveaux
+#
+# 4. AFFINITÉ:
+#    - Anti-affinité: Évite de placer plusieurs réplicas sur le même node
+#    - Améliore la disponibilité en cas de panne d'un node
+#
+# ================================================================================

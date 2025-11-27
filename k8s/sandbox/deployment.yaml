@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sandbox-deployment
+  namespace: codearena
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: codearena
+      component: sandbox
+  template:
+    metadata:
+      labels:
+        app: codearena
+        component: sandbox
+    spec:
+      containers:
+      - name: sandbox
+        image: codearena/sandbox:latest
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 2000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
