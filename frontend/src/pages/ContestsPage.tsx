@@ -108,7 +108,10 @@ export default function ContestsPage({ onNavigate }: ContestsPageProps) {
               <div className="text-2xl font-bold">2,847</div>
             </div>
           </div>
-          <button className="px-6 py-2.5 text-sm font-medium text-blue-600 bg-white rounded-lg hover:bg-blue-50 transition-colors">
+          <button
+            onClick={() => alert('Inscription au concours réussie! Vous recevrez une notification avant le début.')}
+            className="px-6 py-2.5 text-sm font-medium text-blue-600 bg-white rounded-lg hover:bg-blue-50 transition-colors"
+          >
             S'inscrire maintenant
           </button>
         </div>
@@ -140,7 +143,9 @@ export default function ContestsPage({ onNavigate }: ContestsPageProps) {
               duration={contest.duration}
               participants={contest.participants}
               status={contest.status}
-              onClick={() => {}}
+              onClick={() => {
+                alert(`Détails du concours: ${contest.title}`);
+              }}
             />
           ))}
         </div>

@@ -1,4 +1,4 @@
-import { Play, Save, ChevronDown } from 'lucide-react';
+import { Play, ChevronDown, ArrowLeft, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import Header from '../components/Header';
 
@@ -18,8 +18,10 @@ export default function SubmissionPage({ onNavigate }: SubmissionPageProps) {
 
   const [language, setLanguage] = useState('python');
   const [testResults, setTestResults] = useState<any>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleRun = () => {
+    setIsSubmitted(false);
     setTestResults({
       passed: 8,
       total: 10,
@@ -29,6 +31,10 @@ export default function SubmissionPage({ onNavigate }: SubmissionPageProps) {
         { case: 'Test 3', status: 'failed', time: '18ms', memory: '38.6 MB', error: 'Expected [0,1] but got []' }
       ]
     });
+  };
+
+  const handleSubmit = () => {
+    setIsSubmitted(true);
   };
 
   return (
@@ -110,10 +116,6 @@ export default function SubmissionPage({ onNavigate }: SubmissionPageProps) {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
-                    <Save size={16} />
-                    Sauvegarder
-                  </button>
                   <button
                     onClick={handleRun}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
@@ -134,7 +136,40 @@ export default function SubmissionPage({ onNavigate }: SubmissionPageProps) {
               </div>
             </div>
 
-            {testResults && (
+            {isSubmitted ? (
+              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <div className="p-8 text-center">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="text-green-600" size={32} />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Solution soumise avec succès!</h3>
+                  <p className="text-gray-600 mb-6">
+                    Votre solution a été acceptée et vous avez gagné <strong>100 points</strong>
+                  </p>
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="text-sm text-gray-600">Score</div>
+                      <div className="text-2xl font-bold text-gray-900">100/100</div>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="text-sm text-gray-600">Temps</div>
+                      <div className="text-2xl font-bold text-gray-900">45ms</div>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="text-sm text-gray-600">Rang</div>
+                      <div className="text-2xl font-bold text-gray-900">Top 5%</div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => onNavigate('problems')}
+                    className="flex items-center gap-2 px-6 py-3 text-base font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors mx-auto"
+                  >
+                    <ArrowLeft size={20} />
+                    Retour aux problèmes
+                  </button>
+                </div>
+              </div>
+            ) : testResults ? (
               <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <div className="border-b border-gray-200 px-6 py-4">
                   <h3 className="font-semibold text-gray-900">Résultats des tests</h3>
@@ -179,12 +214,15 @@ export default function SubmissionPage({ onNavigate }: SubmissionPageProps) {
                 </div>
 
                 <div className="border-t border-gray-200 px-6 py-4">
-                  <button className="w-full px-6 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  <button
+                    onClick={handleSubmit}
+                    className="w-full px-6 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                  >
                     Soumettre la solution
                   </button>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </main>

@@ -12,46 +12,67 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
       <main className="max-w-7xl mx-auto px-6 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            Défiez les meilleurs<br />développeurs en temps<br />réel
+          <h1 className="text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            Défiez les meilleurs développeurs<br />en temps réel
           </h1>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Rejoignez une communauté de développeurs passionnés, résolvez des problèmes de code
-            et participez à des concours pour améliorer vos compétences.
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Rejoignez une communauté mondiale de développeurs passionnés. Résolvez des défis de programmation,
+            participez à des concours en direct et améliorez vos compétences avec des tests automatiques et un feedback instantané.
           </p>
-          <button
-            onClick={() => onNavigate('register')}
-            className="px-8 py-3.5 text-base font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Commencer gratuitement
-          </button>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={() => onNavigate('register')}
+              className="px-8 py-4 text-lg font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+            >
+              Commencer gratuitement
+            </button>
+            <button
+              onClick={() => onNavigate('problems')}
+              className="px-8 py-4 text-lg font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
+            >
+              Explorer les problèmes
+            </button>
+          </div>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-12 mb-16 text-white">
-          <div className="flex items-center gap-3 mb-4">
-            <Trophy size={32} />
-            <h2 className="text-2xl font-bold">Prochain Concours</h2>
+        <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-3xl p-12 mb-16 text-white shadow-2xl">
+          <div className="flex items-center gap-3 mb-6">
+            <Trophy size={36} className="text-yellow-300" />
+            <h2 className="text-3xl font-bold">Prochain Grand Concours</h2>
           </div>
-          <h3 className="text-3xl font-bold mb-2">ACM ICPC Équivalent</h3>
-          <p className="text-blue-100 mb-6">
-            Rejoignez des milliers de développeurs dans ce concours de programmation compétitive
+          <h3 className="text-4xl font-bold mb-4">CodeArena Championship 2025</h3>
+          <p className="text-blue-100 text-lg mb-8">
+            Rejoignez plus de 2 800 développeurs dans le plus grand concours de programmation de l'année.
+            Testez vos compétences, gagnez des prix et faites-vous remarquer par les recruteurs.
           </p>
-          <div className="flex items-center gap-8 mb-6">
-            <div>
-              <div className="text-sm text-blue-100">Commence dans</div>
-              <div className="text-2xl font-bold">2j 14h 30m</div>
+          <div className="grid grid-cols-3 gap-8 mb-8">
+            <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+              <div className="text-sm text-blue-200 mb-1">Commence dans</div>
+              <div className="text-3xl font-bold">19 jours</div>
             </div>
-            <div>
-              <div className="text-sm text-blue-100">Durée</div>
-              <div className="text-2xl font-bold">3 heures</div>
+            <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+              <div className="text-sm text-blue-200 mb-1">Durée</div>
+              <div className="text-3xl font-bold">3 heures</div>
+            </div>
+            <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+              <div className="text-sm text-blue-200 mb-1">Participants</div>
+              <div className="text-3xl font-bold">2,847</div>
             </div>
           </div>
-          <button
-            onClick={() => onNavigate('contests')}
-            className="px-6 py-2.5 text-sm font-medium text-blue-600 bg-white rounded-lg hover:bg-blue-50 transition-colors"
-          >
-            Voir les détails
-          </button>
+          <div className="flex gap-4">
+            <button
+              onClick={() => onNavigate('contests')}
+              className="px-8 py-3 text-base font-semibold text-blue-600 bg-white rounded-lg hover:bg-blue-50 transition-colors shadow-lg"
+            >
+              S'inscrire maintenant
+            </button>
+            <button
+              onClick={() => onNavigate('contests')}
+              className="px-8 py-3 text-base font-semibold text-white border-2 border-white/30 rounded-lg hover:bg-white/10 transition-colors"
+            >
+              Voir tous les concours
+            </button>
+          </div>
         </div>
 
         <div className="mb-12">

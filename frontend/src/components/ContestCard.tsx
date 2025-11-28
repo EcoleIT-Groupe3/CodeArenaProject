@@ -63,7 +63,19 @@ export default function ContestCard({
         </div>
       </div>
 
-      <button className="w-full mt-4 px-6 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          if (status === 'active') {
+            alert('Redirection vers la salle de concours...');
+          } else if (status === 'upcoming') {
+            alert('Inscription réussie! Vous recevrez une notification avant le début.');
+          } else {
+            alert('Affichage du classement final et des résultats...');
+          }
+        }}
+        className="w-full mt-4 px-6 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+      >
         {status === 'active' ? 'Participer maintenant' : status === 'upcoming' ? "S'inscrire" : 'Voir les résultats'}
       </button>
     </div>
