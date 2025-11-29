@@ -1,0 +1,33 @@
+name: Deploy CodeArena to VM
+
+on:
+  push:
+    branches:
+      - main   # déclenche le déploiement sur chaque push vers main
+
+jobs:
+  deploy:
+    runs-on: self-hosted   # Utilise ton runner sur ta VM
+    steps:
+
+      - name: Pull last version of the project
+        run: |
+          cd /home/ubuntu/CodeArenaProject
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Stop running containers
+        run: |
+          cd /home/ubuntu/CodeArenaProject
+          docker compose down || true
+
+      - name: Remove unused images (optional)
+        run: docker system prune -af || true
+
+      - name: Build & start Docker containers
+        run: |
+          cd /home/ubuntu/CodeArenaProject
+          docker compose up -d --build
+
+      - name: Show running containers
+        run: docker ps
