@@ -35,7 +35,7 @@ services:
       DATABASE_PASSWORD: postgres
       JWT_SECRET: your-super-secret-jwt-key-change-this-in-production
       JWT_EXPIRE: 7d
-      CORS_ORIGIN: http://192.15.202.76:3000
+      CORS_ORIGIN: http://195.15.202.76:3000
     ports:
       - "5000:5000"
     depends_on:
