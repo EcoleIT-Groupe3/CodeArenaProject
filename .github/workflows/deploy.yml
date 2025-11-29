@@ -1,4 +1,4 @@
-name: Deploy CodeArena to VM
+name: Deploy CodeArena
 
 on:
   push:
