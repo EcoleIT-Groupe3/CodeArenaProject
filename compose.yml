@@ -46,7 +46,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    command: sh -c "./wait-for-postgres.sh $DATABASE_HOST npm run migrate && npm run seed && npm start"
+    command: sh -c "sleep 10 && npm run migrate && npm run seed && npm start"
 
   frontend:
     build:
