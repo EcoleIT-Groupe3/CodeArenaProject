@@ -2,7 +2,7 @@
 
 Application fullstack de coding challenges avec React, Node.js, Express et PostgreSQL.
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 CodeArenaProject/
@@ -34,7 +34,7 @@ CodeArenaProject/
 └── docker-compose.yml   # Orchestration Docker
 ```
 
-## 🚀 Démarrage rapide
+##  Démarrage rapide
 
 ### Prérequis
 - Docker
@@ -64,7 +64,7 @@ Cette commande va :
 - Backend API : http://localhost:5000/api
 - PostgreSQL : localhost:5432
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Authentication
 - `POST /api/auth/register` - Inscription
@@ -88,7 +88,7 @@ Cette commande va :
 ### Leaderboard
 - `GET /api/leaderboard` - Classement global
 
-## 🛠️ Développement local
+##  Développement local
 
 ### Backend
 ```bash
@@ -111,7 +111,7 @@ npm run migrate  # Exécuter les migrations
 npm run seed     # Insérer les données de test
 ```
 
-## 🔐 Variables d'environnement
+##  Variables d'environnement
 
 ### Backend (.env)
 ```
@@ -130,7 +130,7 @@ JWT_EXPIRE=7d
 VITE_API_URL=http://localhost:5000/api
 ```
 
-## 🐳 Commandes Docker utiles
+##  Commandes Docker utiles
 
 ```bash
 # Lancer les services
@@ -155,7 +155,7 @@ docker exec -it codearena-backend sh
 docker exec -it codearena-postgres psql -U postgres -d codearena
 ```
 
-## 📦 Technologies utilisées
+## Technologies utilisées
 
 ### Backend
 - Node.js + Express
@@ -174,7 +174,7 @@ docker exec -it codearena-postgres psql -U postgres -d codearena
 - Docker Compose
 - Nginx
 
-## 👨‍💻 Développement
+##  Développement
 
 ### Structure des routes backend
 Toutes les routes sont préfixées par `/api`
@@ -185,6 +185,6 @@ Les routes protégées nécessitent un token JWT dans le header :
 Authorization: Bearer <token>
 ```
 
-## 📝 License
+##  License
 
 MIT
