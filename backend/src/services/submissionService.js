@@ -1,6 +1,7 @@
 const Submission = require('../models/Submission');
 const Problem = require('../models/Problem');
 const User = require('../models/User');
+const CodeExecutionService = require('./codeExecutionService');
 
 class SubmissionService {
   static async submitCode(userId, problemId, code, language) {
@@ -17,7 +18,7 @@ class SubmissionService {
       status: 'pending'
     });
 
-    const result = await this.evaluateSubmission(submission.id, code, problem);
+    const result = await this.evaluateSubmission(submission.id, code, language, problem);
 
     if (result.status === 'accepted') {
       await this.updateUserStats(userId, problem);
@@ -28,19 +29,34 @@ class SubmissionService {
     return result;
   }
 
-  static async evaluateSubmission(submissionId, code, problem) {
-    const executionTime = Math.floor(Math.random() * 50) + 10;
-    const memoryUsed = Math.floor(Math.random() * 20) + 30;
-    const isAccepted = Math.random() > 0.3;
+  static async evaluateSubmission(submissionId, code, language, problem) {
+    try {
+      const testCases = problem.test_cases || [];
 
-    const status = isAccepted ? 'accepted' : 'rejected';
+      if (testCases.length === 0) {
+        throw new Error('No test cases defined for this problem');
+      }
 
-    return await Submission.updateStatus(
-      submissionId,
-      status,
-      executionTime,
-      memoryUsed
-    );
+      const executionResult = await CodeExecutionService.executeCode(
+        code,
+        language,
+        testCases
+      );
+
+      return await Submission.updateStatus(
+        submissionId,
+        executionResult.status,
+        executionResult.executionTime,
+        executionResult.memoryUsed
+      );
+    } catch (error) {
+      return await Submission.updateStatus(
+        submissionId,
+        'error',
+        0,
+        0
+      );
+    }
   }
 
   static async updateUserStats(userId, problem) {
