@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://195.15.202.76:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://195.15.202.76/api';
 
 const getAuthToken = () => {
   return localStorage.getItem('token');
