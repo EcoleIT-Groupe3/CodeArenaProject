@@ -8,9 +8,8 @@ services:
       POSTGRES_DB: codearena
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    # 🚫 Ne pas exposer le port 5432 publiquement
-    # ports:
-    #   - "5432:5432"
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -34,10 +33,7 @@ services:
       DATABASE_NAME: codearena
       DATABASE_USER: postgres
       DATABASE_PASSWORD: postgres
-      JWT_SECRET: your-super-secret-jwt-key-change-this-in-production
-      JWT_EXPIRE: 7d
-      CORS_ORIGIN: http://195.15.202.76:3000
-    # Expose seulement au réseau Docker, pas au public
+      CORS_ORIGIN: http://195.15.202.76
     expose:
       - "5000"
     depends_on:
@@ -53,8 +49,8 @@ services:
     container_name: codearena-frontend
     environment:
       VITE_API_URL: http://195.15.202.76/api
-    ports:
-      - "3000:3000" # Frontend reste accessible publiquement
+    expose:
+      - "80"
     depends_on:
       - backend
     networks:
@@ -68,6 +64,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
+      - frontend
       - backend
     networks:
       - codearena-network
