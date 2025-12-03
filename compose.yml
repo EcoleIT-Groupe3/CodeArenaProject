@@ -33,20 +33,14 @@ services:
       DATABASE_NAME: codearena
       DATABASE_USER: postgres
       DATABASE_PASSWORD: postgres
-      JWT_SECRET: your-super-secret-jwt-key-change-this-in-production
-      JWT_EXPIRE: 7d
-      CORS_ORIGIN: http://195.15.202.76:3000
-    ports:
-      - "5000:5000"
+      CORS_ORIGIN: http://195.15.202.76
+    expose:
+      - "5000"
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - codearena-network
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    command: sh -c "sleep 10 && npm run migrate && npm run seed && npm start"
 
   frontend:
     build:
@@ -54,18 +48,29 @@ services:
       dockerfile: Dockerfile
     container_name: codearena-frontend
     environment:
-      VITE_API_URL: http://192.15.202.76:5000/api
-    ports:
-      - "3000:80"
+      VITE_API_URL: http://195.15.202.76/api
+    expose:
+      - "80"
     depends_on:
+      - backend
+    networks:
+      - codearena-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: codearena-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
       - backend
     networks:
       - codearena-network
 
 volumes:
   postgres_data:
-    driver: local
 
 networks:
   codearena-network:
-    driver: bridge
