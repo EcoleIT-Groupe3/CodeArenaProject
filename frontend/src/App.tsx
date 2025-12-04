@@ -5,6 +5,8 @@ import ProblemsPage from './pages/ProblemsPage';
 import SubmissionPage from './pages/SubmissionPage';
 import ContestsPage from './pages/ContestsPage';
 import ContestRoomPage from './pages/ContestRoomPage';
+import RoomsPage from './pages/RoomsPage';
+import CompetitionRoomPage from './pages/CompetitionRoomPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
@@ -13,11 +15,15 @@ import RegisterPage from './pages/RegisterPage';
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [contestId, setContestId] = useState<string | undefined>();
+  const [roomId, setRoomId] = useState<string | undefined>();
 
   const handleNavigate = (page: string, id?: string) => {
     setCurrentPage(page);
     if (page === 'contest-room' && id) {
       setContestId(id);
+    }
+    if (page === 'competition-room' && id) {
+      setRoomId(id);
     }
   };
 
@@ -33,6 +39,10 @@ function App() {
         return <ContestsPage onNavigate={handleNavigate} />;
       case 'contest-room':
         return <ContestRoomPage onNavigate={handleNavigate} contestId={contestId} />;
+      case 'rooms':
+        return <RoomsPage onNavigate={handleNavigate} />;
+      case 'competition-room':
+        return <CompetitionRoomPage onNavigate={handleNavigate} roomId={roomId} />;
       case 'leaderboard':
         return <LeaderboardPage onNavigate={handleNavigate} />;
       case 'profile':

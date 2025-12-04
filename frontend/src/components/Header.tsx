@@ -49,6 +49,12 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
                 Concours
               </button>
               <button
+                onClick={() => onNavigate?.('rooms')}
+                className={`text-sm font-medium ${currentPage === 'rooms' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
+              >
+                Salles
+              </button>
+              <button
                 onClick={() => onNavigate?.('leaderboard')}
                 className={`text-sm font-medium ${currentPage === 'leaderboard' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
               >
