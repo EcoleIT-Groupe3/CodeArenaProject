@@ -64,7 +64,7 @@ Cette commande va :
 - Backend API : http://localhost:5000/api
 - PostgreSQL : localhost:5432
 
-## 📡 API Endpoints
+##  API Endpoints
 
 ### Authentication
 - `POST /api/auth/register` - Inscription
