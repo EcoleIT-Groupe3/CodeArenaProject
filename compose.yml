@@ -1,6 +1,7 @@
 version: '3.9'
 
 services:
+
   postgres:
     image: postgres:15-alpine
     container_name: codearena-postgres
@@ -8,8 +9,6 @@ services:
       POSTGRES_DB: codearena
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -24,6 +23,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: codearena-backend
     environment:
       PORT: 5000
       NODE_ENV: production
@@ -32,7 +32,7 @@ services:
       DATABASE_NAME: codearena
       DATABASE_USER: postgres
       DATABASE_PASSWORD: postgres
-      CORS_ORIGIN: http://195.15.202.76
+      CORS_ORIGIN: http://195.15.202.76   # frontend servi par Nginx
     expose:
       - "5000"
     depends_on:
@@ -45,8 +45,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    container_name: codearena-frontend
     environment:
-      VITE_API_URL: http://backend:5000/api   # <-- utilise le nom de service backend
+      VITE_API_URL: http://195.15.202.76/api
     expose:
       - "80"
     depends_on:
