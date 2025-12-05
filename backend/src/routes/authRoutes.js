@@ -24,6 +24,7 @@ router.post(
   AuthController.login
 );
 
-router.get('/profile', authMiddleware, AuthController.getProfile);
+// 🔥 Correction ici ↓↓↓
+router.get('/me', authMiddleware, AuthController.getProfile);
 
 module.exports = router;

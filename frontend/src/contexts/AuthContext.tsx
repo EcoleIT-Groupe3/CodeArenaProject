@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { authService } from '../services/api';
-import { supabase } from '../lib/supabase';
 
-type Profile = {
-  id: string;
+type User = {
+  id: number;
   username: string;
+  email: string;
   full_name?: string;
   avatar_url?: string;
   bio?: string;
@@ -17,8 +17,8 @@ type Profile = {
 };
 
 type AuthContextType = {
-  user: Profile | null;
-  profile: Profile | null;
+  user: User | null;
+  profile: User | null;
   loading: boolean;
   signUp: (email: string, password: string, username: string, fullName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
@@ -29,7 +29,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<Profile | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refreshProfile = async () => {
@@ -58,21 +58,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     initializeAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      (async () => {
-        if (session?.user) {
-          const profile = await authService.getCurrentUser();
-          setUser(profile);
-        } else {
-          setUser(null);
-        }
-      })();
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
   }, []);
 
   const signUp = async (email: string, password: string, username: string, fullName: string) => {
