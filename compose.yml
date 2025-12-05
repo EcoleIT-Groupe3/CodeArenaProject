@@ -43,7 +43,7 @@ services:
     networks:
       - codearena-network
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:5000/api/health || exit 1"]
+      test: ["CMD-SHELL", "curl --fail http://195.15.202.76:5000/api/health || exit 1"]
       interval: 10s
       retries: 5
 
@@ -52,7 +52,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: http://localhost:5000/api
+        VITE_API_URL: http://195.15.202.76:5000/api
     container_name: codearena-frontend
     ports:
       - "3000:3000"
@@ -61,7 +61,7 @@ services:
     networks:
       - codearena-network
     environment:
-      VITE_API_URL: http://localhost:5000/api
+      VITE_API_URL: http://195.15.202.76:5000/api
 
 volumes:
   postgres_data:
