@@ -34,7 +34,7 @@ services:
       DATABASE_PASSWORD: codearena_password
       JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
       JWT_EXPIRE: 7d
-      CORS_ORIGIN: http://localhost:3000
+      CORS_ORIGIN: http://195.15.202.76:3000
     ports:
       - "5000:5000"
     depends_on:
