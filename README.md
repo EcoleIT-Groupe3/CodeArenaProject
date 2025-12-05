@@ -2,7 +2,7 @@
 
 Application fullstack de coding challenges avec React, Node.js, Express et PostgreSQL.
 
-## 🏗️ Architecture
+## 🏗️ Architecture.
 
 ```
 CodeArenaProject/
